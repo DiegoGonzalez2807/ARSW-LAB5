@@ -13,10 +13,7 @@ import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -26,6 +23,9 @@ import java.util.Set;
 @Qualifier("Memory")
 public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
 
+
+    private final int VALUE_PRINTS = 5;
+
     private final Map<Tuple<String,String>,Blueprint> blueprints=new HashMap<>();
 
     public InMemoryBlueprintPersistence() {
@@ -33,8 +33,25 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
         Point[] pts=new Point[]{new Point(140, 140),new Point(115, 115)};
         Blueprint bp=new Blueprint("_authorname_", "_bpname_ ",pts);
         blueprints.put(new Tuple<>(bp.getAuthor(),bp.getName()), bp);
+        initializePrints();
         
-    }    
+    }
+
+    /**
+     * Funcion generada para crear dos blueprints que esten con el mismo autor y una cantidad definida por el
+     * usuario donde no se puedan repetir (Segundo ciclo for)
+     */
+    private void initializePrints() {
+        Random random = new Random();
+        //Dos prints que tienen que estar con el mismo autor
+        for(int i = 0;i<2;i++){
+            Blueprint newBp = new Blueprint("Diego Gonzalez","Blueprint"+i);
+        }
+        //Da valores aleatorios para cada autor para que nunca se repitan
+        for(int i = 0;i<VALUE_PRINTS;i++){
+            Blueprint bp = new Blueprint("Author"+random.nextInt(100)+10,"Blueprint"+i);
+        }
+    }
     
     @Override
     public void saveBlueprint(Blueprint bp) throws BlueprintPersistenceException {
