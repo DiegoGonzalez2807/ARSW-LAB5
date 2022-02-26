@@ -24,7 +24,29 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 
 1. Integre al proyecto base suministrado los Beans desarrollados en el ejercicio anterior. Sólo copie las clases, NO los archivos de configuración. Rectifique que se tenga correctamente configurado el esquema de inyección de dependencias con las anotaciones @Service y @Autowired.
 
+#### Se inserta el laboratorio 4 en la carpeta de blueprints
+![](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/CARPETAS.png)
+
 2. Modifique el bean de persistecia 'InMemoryBlueprintPersistence' para que por defecto se inicialice con al menos otros tres planos, y con dos asociados a un mismo autor.
+
+#### Se genera una función para automatizar la creación de los blueprints. Esta maneja una variable VALUE_PRINTS la cuál nos da la cantidad de prints que se tienen que crear
+```java
+/**
+     * Funcion generada para crear dos blueprints que esten con el mismo autor y una cantidad definida por el
+     * usuario donde no se puedan repetir (Segundo ciclo for)
+     */
+    private void initializePrints() {
+        Random random = new Random();
+        //Dos prints que tienen que estar con el mismo autor
+        for(int i = 0;i<2;i++){
+            Blueprint newBp = new Blueprint("Diego Gonzalez","Blueprint"+i);
+        }
+        //Da valores aleatorios para cada autor para que nunca se repitan
+        for(int i = 0;i<VALUE_PRINTS;i++){
+            Blueprint bp = new Blueprint("Author"+random.nextInt(100)+10,"Blueprint"+i);
+        }
+    }
+```
 
 3. Configure su aplicación para que ofrezca el recurso "/blueprints", de manera que cuando se le haga una petición GET, retorne -en formato jSON- el conjunto de todos los planos. Para esto:
 
