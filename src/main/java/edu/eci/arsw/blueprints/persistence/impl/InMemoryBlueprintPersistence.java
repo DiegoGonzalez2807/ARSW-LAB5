@@ -45,11 +45,19 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
         Random random = new Random();
         //Dos prints que tienen que estar con el mismo autor
         for(int i = 0;i<2;i++){
-            Blueprint newBp = new Blueprint("Diego Gonzalez","Blueprint"+i);
+            Point[] points = new Point[10];
+            for(int j=0;j<10;j++){
+                points[j] = new Point(random.nextInt(100), random.nextInt(100) );
+            }
+            Blueprint newBp = new Blueprint("Diego Gonzalez","Blueprint"+i,points);
             blueprints.put(new Tuple<>(newBp.getAuthor(),newBp.getName()),newBp);
         }
         //Da valores aleatorios para cada autor para que nunca se repitan
         for(int i = 0;i<VALUE_PRINTS;i++){
+            Point[] points = new Point[10];
+            for(int j=0;j<10;j++){
+                points[j] = new Point(random.nextInt(100), random.nextInt(100) );
+            }
             Blueprint bp = new Blueprint("Author"+random.nextInt(100)+10,"Blueprint"+i);
             blueprints.put(new Tuple<>(bp.getAuthor(),bp.getName()),bp);
         }

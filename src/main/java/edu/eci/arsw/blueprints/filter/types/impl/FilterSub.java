@@ -39,9 +39,11 @@ public class FilterSub implements filterType {
 
     @Override
     public void filterBlueprints(Set<Blueprint> blueprints) throws BlueprintPersistenceException, BlueprintNotFoundException {
+        //System.out.println("Antes----------------------------:"+blueprints.toString());
         for(Blueprint print: blueprints){
             filterBlueprint(print);
         }
+        //System.out.println("Despues------------------:"+blueprints.toString());
     }
 
     @Override

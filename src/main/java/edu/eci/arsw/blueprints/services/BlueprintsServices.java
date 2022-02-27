@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Component
-@Qualifier("Service")
+//@Qualifier("Service")
 public class BlueprintsServices {
    
     @Autowired
@@ -80,9 +80,9 @@ public class BlueprintsServices {
      * @throws BlueprintPersistenceException
      */
     public void applyFilter(Set<Blueprint> bps) throws BlueprintNotFoundException, BlueprintPersistenceException {
-        System.out.println("Antes--------------------------------:"+bps.toString());
+        //System.out.println("Antes--------------------------------:"+bps.toString());
         filter.filterBlueprints(bps);
-        System.out.println("Despues-------------------------------:"+bps.toString());
+        //System.out.println("Despues-------------------------------:"+bps.toString());
     }
 
     /**
