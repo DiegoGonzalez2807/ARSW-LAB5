@@ -14,16 +14,19 @@ import java.util.Set;
 public class FilterService {
     @Autowired
     @Qualifier("Redundancy")
-    filterType filter;
+    filterType filterR;
+
+    @Qualifier("Sub")
+    filterType filterS;
 
 
 
     public void filterBlueprint(Blueprint bp) throws BlueprintNotFoundException {
-        filter.filterBlueprint(bp);
+        filterR.filterBlueprint(bp);
     }
 
     public void filterBlueprints(Set<Blueprint> blueprints) throws BlueprintNotFoundException, BlueprintPersistenceException {
-        filter.filterBlueprints(blueprints);
+        filterR.filterBlueprints(blueprints);
 
     }
 }

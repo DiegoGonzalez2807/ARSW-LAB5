@@ -5,9 +5,20 @@
  */
 package edu.eci.arsw.blueprints.controllers;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
+
+import edu.eci.arsw.blueprints.model.Blueprint;
+import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
+import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
+import edu.eci.arsw.blueprints.persistence.impl.InMemoryBlueprintPersistence;
+import edu.eci.arsw.blueprints.persistence.impl.Tuple;
+import edu.eci.arsw.blueprints.services.BlueprintsServices;
+import org.jboss.logging.Logger;
+import org.jboss.logging.Logger.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,8 +27,29 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author hcadavid
  */
+@RestController
+@RequestMapping(value = "/blueprints")
 public class BlueprintAPIController {
-    
+
+    @Qualifier("Service")
+    BlueprintsServices service;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<String> manejadorGetRecursoXX(){
+        Set<Blueprint> bps = null;
+        InMemoryBlueprintPersistence imbp = null;
+        try {
+            service = new BlueprintsServices();
+            service.aplyFilter(service.getAllBlueprints());
+            bps = service.getAllBlueprints();
+        } catch(BlueprintNotFoundException e){
+            e.printStackTrace();
+        }catch(BlueprintPersistenceException bpPe){
+            bpPe.printStackTrace();
+        }
+        return new ResponseEntity<String> (bps.toString(), HttpStatus.ACCEPTED);
+    }
+
     
     
     

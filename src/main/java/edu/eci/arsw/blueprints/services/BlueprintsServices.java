@@ -5,18 +5,18 @@
  */
 package edu.eci.arsw.blueprints.services;
 
+import edu.eci.arsw.blueprints.filter.types.filterType;
 import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,11 +24,17 @@ import org.springframework.stereotype.Service;
  * @author hcadavid
  */
 @Service
+@Component
+@Qualifier("Service")
 public class BlueprintsServices {
    
     @Autowired
     @Qualifier("Memory")
     BlueprintsPersistence bpp;
+
+    @Autowired
+    @Qualifier("sub")
+    filterType filter;
     
     public void addNewBlueprint(Blueprint bp) throws BlueprintPersistenceException {
         bpp.saveBlueprint(bp);
@@ -57,5 +63,36 @@ public class BlueprintsServices {
     public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException, BlueprintPersistenceException{
         return bpp.getBlueprintsByAuthor(author);
     }
+
+    /**
+     * Aplica el filtro a el blueprint
+     * @param bp Blueprint a aplicar el filtro
+     * @throws BlueprintNotFoundException
+     */
+    public void applyFilter(Blueprint bp) throws BlueprintNotFoundException {
+        filter.filterBlueprint(bp);
+    }
+
+    /**
+     * Aplica el filtro a el set de Blueprints
+     * @param bps Set de Blueprints a aplicar el filtro
+     * @throws BlueprintNotFoundException
+     * @throws BlueprintPersistenceException
+     */
+    public void aplyFilter(Set<Blueprint> bps) throws BlueprintNotFoundException, BlueprintPersistenceException {
+        filter.filterBlueprints(bps);
+    }
+
+    /**
+     * Aplica el filtro por autor a un set de BluePrints
+     * @param author Nombre del autor del plano a los que se hara filtro
+     * @param bps Set de planos a los que se hara el filtro por autor
+     * @throws BlueprintNotFoundException
+     * @throws BlueprintPersistenceException
+     */
+    public void applyFilerByAuthor(String author,Set<Blueprint> bps) throws BlueprintNotFoundException, BlueprintPersistenceException {
+        filter.filterPrintsByAuthor(author,bps);
+    }
+
     
 }
