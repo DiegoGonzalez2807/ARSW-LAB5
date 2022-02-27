@@ -69,8 +69,63 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
         }        
 	}
 
-	```
+	```  
+	
+	* Para la implementacion del recurso blueprinst tenemos:
+	
+	```java
+	@RestController
+	@RequestMapping(value = "/blueprints")
+	public class BlueprintAPIController {
+
+    @Qualifier("Service")
+    BlueprintsServices service;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<String> manejadorGetRecursoXX(){
+        Set<Blueprint> bps = null;
+        InMemoryBlueprintPersistence imbp = null;
+        try {
+            service = new BlueprintsServices();
+            bps = service.getAllBlueprints();
+        } catch(BlueprintNotFoundException e){
+            e.printStackTrace();
+        }catch(BlueprintPersistenceException bpPe){
+            bpPe.printStackTrace();
+        }
+        return new ResponseEntity<String> (bps.toString(), HttpStatus.ACCEPTED);
+    }
+   	
+	```  
+
 	* Haga que en esta misma clase se inyecte el bean de tipo BlueprintServices (al cual, a su vez, se le inyectarán sus dependencias de persisntecia y de filtrado de puntos).
+	* Para la implementación de el recurso /blueprints con el filtro de Submuestreo tenemos:
+	
+	```java
+	@RestController
+	@RequestMapping(value = "/blueprints")
+	public class BlueprintAPIController {
+
+    @Qualifier("Service")
+    BlueprintsServices service;
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<String> manejadorGetRecursoXX(){
+        Set<Blueprint> bps = null;
+        InMemoryBlueprintPersistence imbp = null;
+        try {
+            service = new BlueprintsServices();
+            service.aplyFilter(service.getAllBlueprints());
+            bps = service.getAllBlueprints();
+        } catch(BlueprintNotFoundException e){
+            e.printStackTrace();
+        }catch(BlueprintPersistenceException bpPe){
+            bpPe.printStackTrace();
+        }
+        return new ResponseEntity<String> (bps.toString(), HttpStatus.ACCEPTED);
+    }
+	
+	```  
 
 4. Verifique el funcionamiento de a aplicación lanzando la aplicación con maven:
 
