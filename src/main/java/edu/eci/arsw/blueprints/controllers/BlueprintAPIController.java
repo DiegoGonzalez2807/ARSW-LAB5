@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/blueprints")
 public class BlueprintAPIController {
 
+    @Autowired
     @Qualifier("Service")
     BlueprintsServices service;
 
@@ -39,9 +40,10 @@ public class BlueprintAPIController {
         Set<Blueprint> bps = null;
         InMemoryBlueprintPersistence imbp = null;
         try {
-            service = new BlueprintsServices();
-            service.aplyFilter(service.getAllBlueprints());
             bps = service.getAllBlueprints();
+            //System.out.println("Antes----------------------------------"+bps.toString());
+            service.applyFilter(bps);
+            //System.out.println("Despues---------------------------------"+bps.toString());
         } catch(BlueprintNotFoundException e){
             e.printStackTrace();
         }catch(BlueprintPersistenceException bpPe){

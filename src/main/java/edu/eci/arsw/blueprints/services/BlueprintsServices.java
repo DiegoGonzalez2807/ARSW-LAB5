@@ -33,7 +33,7 @@ public class BlueprintsServices {
     BlueprintsPersistence bpp;
 
     @Autowired
-    @Qualifier("sub")
+    @Qualifier("Sub")
     filterType filter;
     
     public void addNewBlueprint(Blueprint bp) throws BlueprintPersistenceException {
@@ -79,8 +79,10 @@ public class BlueprintsServices {
      * @throws BlueprintNotFoundException
      * @throws BlueprintPersistenceException
      */
-    public void aplyFilter(Set<Blueprint> bps) throws BlueprintNotFoundException, BlueprintPersistenceException {
+    public void applyFilter(Set<Blueprint> bps) throws BlueprintNotFoundException, BlueprintPersistenceException {
+        System.out.println("Antes--------------------------------:"+bps.toString());
         filter.filterBlueprints(bps);
+        System.out.println("Despues-------------------------------:"+bps.toString());
     }
 
     /**
