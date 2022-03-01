@@ -161,7 +161,10 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
     }
 	```
 	
-	Para la peticion de /blueprints
+	### Para la peticion de /blueprints  
+	![SericioBluePrints](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/JSonTestBP.jpg) 
+	### Para la peticion de /blueprints/Diego Gonzalez
+	![ServicioBluePrintsByAuthor](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/JSonTestBPByAuthor.jpg)  
 	
 
 6. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}/{bpname}, el cual retorne usando una representación jSON sólo UN plano, en este caso el realizado por {author} y cuyo nombre sea {bpname}. De nuevo, si no existe dicho autor, se debe responder con el código de error HTTP 404. 
