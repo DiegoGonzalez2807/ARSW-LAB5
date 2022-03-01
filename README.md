@@ -102,29 +102,28 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 	* Para la implementación de el recurso /blueprints con el filtro de Submuestreo tenemos:
 	
 	```java
+	@Service
 	@RestController
-	@RequestMapping(value = "/blueprints")
 	public class BlueprintAPIController {
 
-    @Qualifier("Service")
-    BlueprintsServices service;
+	    @Autowired
+	    //@Qualifier("Service")
+	    BlueprintsServices service;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<String> manejadorGetRecursoXX(){
-        Set<Blueprint> bps = null;
-        InMemoryBlueprintPersistence imbp = null;
-        try {
-            service = new BlueprintsServices();
-            service.aplyFilter(service.getAllBlueprints());
-            bps = service.getAllBlueprints();
-        } catch(BlueprintNotFoundException e){
-            e.printStackTrace();
-        }catch(BlueprintPersistenceException bpPe){
-            bpPe.printStackTrace();
-        }
-        return new ResponseEntity<String> (bps.toString(), HttpStatus.ACCEPTED);
-    }
-	
+	    @RequestMapping(value = "/blueprints",method = RequestMethod.GET)
+	    public ResponseEntity<String> manejadorGetBluePrints(){
+		Set<Blueprint> bps = null;
+		InMemoryBlueprintPersistence imbp = null;
+		try {
+		    bps = service.getAllBlueprints();
+		    service.applyFilter(bps);
+		} catch(BlueprintNotFoundException e){
+		    e.printStackTrace();
+		}catch(BlueprintPersistenceException bpPe){
+		    bpPe.printStackTrace();
+		}
+		return new ResponseEntity<String> (bps.toString(), HttpStatus.ACCEPTED);
+	    }
 	```  
 
 4. Verifique el funcionamiento de a aplicación lanzando la aplicación con maven:
@@ -143,6 +142,27 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 
 
 5. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}, el cual retorne usando una representación jSON todos los planos realizados por el autor cuyo nombre sea {author}. Si no existe dicho autor, se debe responder con el código de error HTTP 404. Para esto, revise en [la documentación de Spring](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html), sección 22.3.2, el uso de @PathVariable. De nuevo, verifique que al hacer una petición GET -por ejemplo- a recurso http://localhost:8080/blueprints/juan, se obtenga en formato jSON el conjunto de planos asociados al autor 'juan' (ajuste esto a los nombres de autor usados en el punto 2).
+	Para esta peticion hacemos uso de:  
+	```java
+	    @RequestMapping(value = "/blueprints/{author}",method = RequestMethod.GET)
+    public ResponseEntity<String> manejadorGetBluePrintsByAuthor(@PathVariable String author){
+        ResponseEntity<String> mensaje;
+        Set<Blueprint> bps = null;
+        InMemoryBlueprintPersistence imbp = null;
+        try {
+            bps = service.getBlueprintsByAuthor(author);
+            mensaje = new ResponseEntity<String>(bps.toString(),HttpStatus.ACCEPTED);
+        } catch (BlueprintNotFoundException e) {
+            mensaje = new ResponseEntity<String>("No se encontro el autor",HttpStatus.NOT_FOUND);
+        } catch (BlueprintPersistenceException e) {
+            mensaje = new ResponseEntity<String>("Algo salio mal", HttpStatus.BAD_REQUEST);
+        }
+        return mensaje;
+    }
+	```
+	
+	Para la peticion de /blueprints
+	
 
 6. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}/{bpname}, el cual retorne usando una representación jSON sólo UN plano, en este caso el realizado por {author} y cuyo nombre sea {bpname}. De nuevo, si no existe dicho autor, se debe responder con el código de error HTTP 404. 
 
