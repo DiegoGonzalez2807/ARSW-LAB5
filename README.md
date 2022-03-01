@@ -187,7 +187,10 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
     }
 	
 	```  
-	### Para la peticion /blueprints/Deigo Gonzalez
+	### Para la peticion /blueprints/Diego Gonzalez  
+	![PeticionBlueprintsByAuthor](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/JSonTestAuthor.jpg)  
+	### Para la peticion /blueprints/Diego Gonzalez/Bleprint1  
+	![PeticionBlueprint](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/JSonTestBPName.jpg)
 	
 
 
