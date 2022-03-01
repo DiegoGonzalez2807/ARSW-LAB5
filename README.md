@@ -165,9 +165,31 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 	![SericioBluePrints](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/JSonTestBP.jpg) 
 	### Para la peticion de /blueprints/Diego Gonzalez
 	![ServicioBluePrintsByAuthor](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/JSonTestBPByAuthor.jpg)  
+	### Para la peticion de /blueprints/juan
+	
 	
 
 6. Modifique el controlador para que ahora, acepte peticiones GET al recurso /blueprints/{author}/{bpname}, el cual retorne usando una representación jSON sólo UN plano, en este caso el realizado por {author} y cuyo nombre sea {bpname}. De nuevo, si no existe dicho autor, se debe responder con el código de error HTTP 404. 
+	Para esta peticion tenemos...
+	```java
+	    @RequestMapping(value = "/blueprints/{author}/{bpname}")
+    public ResponseEntity<String> namejadorGetBluePrint(@PathVariable String author, @PathVariable String bpname){
+        Blueprint bp = null;
+        InMemoryBlueprintPersistence imbp = null;
+        ResponseEntity<String> mensaje;
+        try{
+            bp = service.getBlueprint(author,bpname);
+            mensaje = new ResponseEntity<>(bp.toString(),HttpStatus.ACCEPTED);
+        } catch (BlueprintNotFoundException e) {
+            mensaje = new ResponseEntity<String>("No se encontro el autor",HttpStatus.NOT_FOUND);
+        }
+        return mensaje;
+    }
+	
+	```  
+	### Para la peticion /blueprints/Deigo Gonzalez
+	
+
 
 
 
