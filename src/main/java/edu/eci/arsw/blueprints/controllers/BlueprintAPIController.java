@@ -36,19 +36,35 @@ public class BlueprintAPIController {
 
     @RequestMapping(value = "/blueprints",method = RequestMethod.GET)
     public ResponseEntity<String> manejadorGetBluePrints(){
+        ResponseEntity<String> mensaje = null;
         Set<Blueprint> bps = null;
         InMemoryBlueprintPersistence imbp = null;
         try {
             bps = service.getAllBlueprints();
             //System.out.println("Antes----------------------------------"+bps.toString());
             service.applyFilter(bps);
+            mensaje = new ResponseEntity<>(bps.toString(),HttpStatus.ACCEPTED);
             //System.out.println("Despues---------------------------------"+bps.toString());
-        } catch(BlueprintNotFoundException e){
-            e.printStackTrace();
-        }catch(BlueprintPersistenceException bpPe){
-            bpPe.printStackTrace();
+        } catch (BlueprintNotFoundException e) {
+            mensaje = new ResponseEntity<String>("No se encontro el autor",HttpStatus.NOT_FOUND);
+        } catch (BlueprintPersistenceException e) {
+            mensaje = new ResponseEntity<String>("Algo salio mal", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String> (bps.toString(), HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value = "/blueprints/{author}/{bpname}")
+    public ResponseEntity<String> namejadorGetBluePrint(@PathVariable String author, @PathVariable String bpname){
+        Blueprint bp = null;
+        InMemoryBlueprintPersistence imbp = null;
+        ResponseEntity<String> mensaje;
+        try{
+            bp = service.getBlueprint(author,bpname);
+            mensaje = new ResponseEntity<>(bp.toString(),HttpStatus.ACCEPTED);
+        } catch (BlueprintNotFoundException e) {
+            mensaje = new ResponseEntity<String>("No se encontro el autor",HttpStatus.NOT_FOUND);
+        }
+        return mensaje;
     }
 
     @RequestMapping(value = "/blueprints/{author}",method = RequestMethod.GET)
@@ -67,6 +83,7 @@ public class BlueprintAPIController {
         }
         return mensaje;
     }
+
 
     
     
