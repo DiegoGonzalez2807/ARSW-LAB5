@@ -76,8 +76,11 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
 
     @Override
     public Blueprint getBlueprint(String author, String bprintname) throws BlueprintNotFoundException {
-        System.out.println(blueprints.size());
-        return blueprints.get(new Tuple<>(author, bprintname));
+        Blueprint bp = blueprints.get(new Tuple<>(author,bprintname));
+        if(bp == null){
+            throw new BlueprintNotFoundException("El plano no existe");
+        }
+        return bp;
     }
 
     @Override
@@ -98,6 +101,7 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
                 prints.add(blueprints.get(tuple));
             }
         }
+        if(prints.size() == 0){throw new BlueprintNotFoundException("El author no tiene planos");}
         return prints;
     }
 }

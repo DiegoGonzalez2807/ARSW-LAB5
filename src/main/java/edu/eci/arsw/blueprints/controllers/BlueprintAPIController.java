@@ -20,9 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
@@ -30,15 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Service
 @RestController
-@RequestMapping(value = "/blueprints")
 public class BlueprintAPIController {
 
     @Autowired
     //@Qualifier("Service")
     BlueprintsServices service;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<String> manejadorGetRecursoXX(){
+    @RequestMapping(value = "/blueprints",method = RequestMethod.GET)
+    public ResponseEntity<String> manejadorGetBluePrints(){
         Set<Blueprint> bps = null;
         InMemoryBlueprintPersistence imbp = null;
         try {
@@ -52,6 +49,23 @@ public class BlueprintAPIController {
             bpPe.printStackTrace();
         }
         return new ResponseEntity<String> (bps.toString(), HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value = "/blueprints/{author}",method = RequestMethod.GET)
+    public ResponseEntity<String> manejadorGetBluePrintsByAuthor(@PathVariable String author){
+        ResponseEntity<String> mensaje;
+        Set<Blueprint> bps = null;
+        InMemoryBlueprintPersistence imbp = null;
+        try {
+            bps = service.getBlueprintsByAuthor(author);
+            //System.out.println("Diego-------------------------"+bps.toString());
+            mensaje = new ResponseEntity<String>(bps.toString(),HttpStatus.ACCEPTED);
+        } catch (BlueprintNotFoundException e) {
+            mensaje = new ResponseEntity<String>("No se encontro el autor",HttpStatus.NOT_FOUND);
+        } catch (BlueprintPersistenceException e) {
+            mensaje = new ResponseEntity<String>("Algo salio mal", HttpStatus.BAD_REQUEST);
+        }
+        return mensaje;
     }
 
     
