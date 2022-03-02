@@ -278,6 +278,17 @@ El componente BlueprintsRESTAPI funcionará en un entorno concurrente. Es decir,
 	- Las regiones críticas son todos aquellos métodos que funcionen mediante peticiones HTTP (GET,POST,PUT,DELETE). Esto debido  que estas llaman un recurso compartido que es el arreglo de blueprints ya sea para modificarlo, añadir planos nuevos o eliminar el que el usuario elija. Esto puede generar problemas como deadLocks o comportamientos no deseados como condiciones de carrera en los datos
 
 Ajuste el código para suprimir las condiciones de carrera. Tengan en cuenta que simplemente sincronizar el acceso a las operaciones de persistencia/consulta DEGRADARÁ SIGNIFICATIVAMENTE el desempeño de API, por lo cual se deben buscar estrategias alternativas.
+```java
+	@Component
+@Qualifier("Memory")
+public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
+
+
+    private final int VALUE_PRINTS = 5;
+
+    private final ConcurrentHashMap<Tuple<String,String>,Blueprint> blueprints=new ConcurrentHashMap<>();
+```  
+#### Como solución a las secciones críticas y condiciones de carrera que se presentan. Se vuelve Thread-Safe la persistencia implementada, la cual en este caso es InMemoryBlueprintPersistence. Esto genera que el recurso compartido no pueda ser usado por más de un hilo a la vez. El recurso era el hashMap blueprints. Tenía condiciones de carrera donde si se consultaba y a la vez se insertaba, no se tenía consistencia en los datos. De igual manera, para las regiones críticas, cada hilo tendrá que esperar para poder ejecutar su función. El cambio que se hace es de volver tipo atómico el hashmap (ConcurrentHashMap).
 
 Escriba su análisis y la solución aplicada en el archivo ANALISIS_CONCURRENCIA.txt
 
