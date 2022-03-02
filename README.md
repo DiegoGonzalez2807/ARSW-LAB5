@@ -4,8 +4,8 @@
 
 ## Integrantes
 
-Cristian Andres Castellanos Fino
-Diego Alejandro Gonzalez
+-Cristian Andres Castellanos Fino  
+-Diego Alejandro Gonzalez  
 
 
 
@@ -268,7 +268,26 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 	![PruebaPost](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/PruebaPost.jpg)  
 	
 
-4. Agregue soporte al verbo PUT para los recursos de la forma '/blueprints/{author}/{bpname}', de manera que sea posible actualizar un plano determinado.
+4. Agregue soporte al verbo PUT para los recursos de la forma '/blueprints/{author}/{bpname}', de manera que sea posible actualizar un plano determinado.  
+	Para el manejo de Put hacemos...
+	```java
+	    @PutMapping(value = "/blueprints/{author}/{bpname}")
+    public ResponseEntity<?> manejadorPutRecursoBluePrint(@PathVariable String author, @PathVariable String bpname, @RequestBody List<Point> points){
+        ResponseEntity<?> mensaje;
+        System.out.println("Entro a actualizar supuestamente");
+        try {
+            service.updateBluePrint(author,bpname,points);
+            Blueprint bp = service.getBlueprint(author,bpname);
+            mensaje = new ResponseEntity<>(bp,HttpStatus.ACCEPTED);
+        } catch (BlueprintNotFoundException e) {
+            mensaje = new ResponseEntity<>("No exite el plano con el nombre dado",HttpStatus.NOT_FOUND);
+        }
+        return mensaje;
+    }
+	
+	```  
+	Hacemos la peticion de PUT, por medio de GitBash.  
+	![]()
 
 
 ### Parte III
