@@ -8,6 +8,7 @@ package edu.eci.arsw.blueprints.controllers;
 import java.util.*;
 
 import edu.eci.arsw.blueprints.model.Blueprint;
+import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.persistence.impl.InMemoryBlueprintPersistence;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import org.json.JSONObject;
 
 /**
  *
@@ -35,51 +37,63 @@ public class BlueprintAPIController {
     BlueprintsServices service;
 
     @RequestMapping(value = "/blueprints",method = RequestMethod.GET)
-    public ResponseEntity<String> manejadorGetBluePrints(){
-        ResponseEntity<String> mensaje = null;
+    public ResponseEntity<?> manejadorGetBluePrints(){
+        ResponseEntity<?> mensaje = null;
         Set<Blueprint> bps = null;
         InMemoryBlueprintPersistence imbp = null;
         try {
             bps = service.getAllBlueprints();
-            //System.out.println("Antes----------------------------------"+bps.toString());
             service.applyFilter(bps);
-            mensaje = new ResponseEntity<>(bps.toString(),HttpStatus.ACCEPTED);
-            //System.out.println("Despues---------------------------------"+bps.toString());
+            mensaje = new ResponseEntity<>(bps,HttpStatus.ACCEPTED);
         } catch (BlueprintNotFoundException e) {
-            mensaje = new ResponseEntity<String>("No se encontro el autor",HttpStatus.NOT_FOUND);
+            mensaje = new ResponseEntity<>("No se encontro el autor",HttpStatus.NOT_FOUND);
         } catch (BlueprintPersistenceException e) {
-            mensaje = new ResponseEntity<String>("Algo salio mal", HttpStatus.BAD_REQUEST);
+            mensaje = new ResponseEntity<>("Algo salio mal", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<String> (bps.toString(), HttpStatus.ACCEPTED);
+        return mensaje;
     }
 
     @RequestMapping(value = "/blueprints/{author}/{bpname}")
-    public ResponseEntity<String> namejadorGetBluePrint(@PathVariable String author, @PathVariable String bpname){
+    public ResponseEntity<?> namejadorGetBluePrint(@PathVariable String author, @PathVariable String bpname){
         Blueprint bp = null;
         InMemoryBlueprintPersistence imbp = null;
-        ResponseEntity<String> mensaje;
+        ResponseEntity<?> mensaje;
         try{
             bp = service.getBlueprint(author,bpname);
-            mensaje = new ResponseEntity<>(bp.toString(),HttpStatus.ACCEPTED);
+            mensaje = new ResponseEntity<>(bp,HttpStatus.ACCEPTED);
         } catch (BlueprintNotFoundException e) {
-            mensaje = new ResponseEntity<String>("No se encontro el autor",HttpStatus.NOT_FOUND);
+            mensaje = new ResponseEntity<>("No existe autor o plano con ese nombre.",HttpStatus.NOT_FOUND);
         }
         return mensaje;
     }
 
     @RequestMapping(value = "/blueprints/{author}",method = RequestMethod.GET)
-    public ResponseEntity<String> manejadorGetBluePrintsByAuthor(@PathVariable String author){
-        ResponseEntity<String> mensaje;
+    public ResponseEntity<?> manejadorGetBluePrintsByAuthor(@PathVariable String author){
+        ResponseEntity<?> mensaje;
         Set<Blueprint> bps = null;
         InMemoryBlueprintPersistence imbp = null;
         try {
             bps = service.getBlueprintsByAuthor(author);
             //System.out.println("Diego-------------------------"+bps.toString());
-            mensaje = new ResponseEntity<String>(bps.toString(),HttpStatus.ACCEPTED);
+            mensaje = new ResponseEntity<>(bps,HttpStatus.ACCEPTED);
         } catch (BlueprintNotFoundException e) {
-            mensaje = new ResponseEntity<String>("No se encontro el autor",HttpStatus.NOT_FOUND);
+            mensaje = new ResponseEntity<>("No se encontro el autor",HttpStatus.NOT_FOUND);
         } catch (BlueprintPersistenceException e) {
-            mensaje = new ResponseEntity<String>("Algo salio mal", HttpStatus.BAD_REQUEST);
+            mensaje = new ResponseEntity<>("Algo salio mal", HttpStatus.BAD_REQUEST);
+        }
+        return mensaje;
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<?> manejadorPostRecursoBluePrint(@RequestBody Blueprint bp){
+        ResponseEntity<?> mensaje;
+        try {
+            //registrar dato
+            service.addNewBlueprint(bp);
+            mensaje = new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (BlueprintPersistenceException e) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.FATAL, null, e);
+            mensaje = new ResponseEntity<>("EL nombre del plano ya existe",HttpStatus.NOT_ACCEPTABLE);
         }
         return mensaje;
     }
