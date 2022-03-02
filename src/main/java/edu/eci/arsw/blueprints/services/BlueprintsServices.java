@@ -97,5 +97,13 @@ public class BlueprintsServices {
         filter.filterPrintsByAuthor(author,bps);
     }
 
+    public void updateBluePrint(String author, String bpname, List<Point> points) throws BlueprintNotFoundException {
+        Blueprint bp = getBlueprint(author,bpname);
+        System.out.println("Antes---------------"+bp.toString());
+        bp.setPoints(points);
+        System.out.println("Despues---------------"+bp.toString());
+
+    }
+
     
 }

@@ -98,22 +98,19 @@ public class BlueprintAPIController {
         return mensaje;
     }
 
-    @RequestMapping(value = "/blueprints/addBlueprint",method = RequestMethod.POST, consumes = "application/json")
-    public ResponseEntity<?> manejadorPostRecursoBluePrint(@RequestBody Set<Blueprint> bps){
+    @PutMapping(value = "/blueprints/{author}/{bpname}")
+    public ResponseEntity<?> manejadorPutRecursoBluePrint(@PathVariable String author, @PathVariable String bpname, @RequestBody List<Point> points){
         ResponseEntity<?> mensaje;
+        System.out.println("Entro a actualizar supuestamente");
         try {
-            //registrar dato
-            for(Blueprint bp:bps){
-                service.addNewBlueprint(bp);
-            }
-            mensaje = new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (BlueprintPersistenceException e) {
-            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.FATAL, null, e);
-            mensaje = new ResponseEntity<>("EL nombre del plano ya existe",HttpStatus.NOT_ACCEPTABLE);
+            service.updateBluePrint(author,bpname,points);
+            Blueprint bp = service.getBlueprint(author,bpname);
+            mensaje = new ResponseEntity<>(bp,HttpStatus.ACCEPTED);
+        } catch (BlueprintNotFoundException e) {
+            mensaje = new ResponseEntity<>("No exite el plano con el nombre dado",HttpStatus.NOT_FOUND);
         }
         return mensaje;
     }
-
 
     
     
