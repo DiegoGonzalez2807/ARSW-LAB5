@@ -84,12 +84,28 @@ public class BlueprintAPIController {
         return mensaje;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/blueprints/addBlueprint",method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<?> manejadorPostRecursoBluePrint(@RequestBody Blueprint bp){
         ResponseEntity<?> mensaje;
         try {
             //registrar dato
             service.addNewBlueprint(bp);
+            mensaje = new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (BlueprintPersistenceException e) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.FATAL, null, e);
+            mensaje = new ResponseEntity<>("EL nombre del plano ya existe",HttpStatus.NOT_ACCEPTABLE);
+        }
+        return mensaje;
+    }
+
+    @RequestMapping(value = "/blueprints/addBlueprint",method = RequestMethod.POST, consumes = "application/json")
+    public ResponseEntity<?> manejadorPostRecursoBluePrint(@RequestBody Set<Blueprint> bps){
+        ResponseEntity<?> mensaje;
+        try {
+            //registrar dato
+            for(Blueprint bp:bps){
+                service.addNewBlueprint(bp);
+            }
             mensaje = new ResponseEntity<>(HttpStatus.CREATED);
         } catch (BlueprintPersistenceException e) {
             Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.FATAL, null, e);
