@@ -2,6 +2,11 @@
 
 ### Arquitecturas de Software
 
+## Integrantes
+
+Cristian Andres Castellanos Fino
+Diego Alejandro Gonzalez
+
 
 
 #### API REST para la gestión de planos.
