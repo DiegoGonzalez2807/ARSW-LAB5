@@ -260,6 +260,9 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 El componente BlueprintsRESTAPI funcionará en un entorno concurrente. Es decir, atederá múltiples peticiones simultáneamente (con el stack de aplicaciones usado, dichas peticiones se atenderán por defecto a través múltiples de hilos). Dado lo anterior, debe hacer una revisión de su API (una vez funcione), e identificar:
 
 * Qué condiciones de carrera se podrían presentar?
+	- Se tiene la primer condición de carrera de modificar un blueprint mientras que se está consultando estos. Ese comportamiento genera inconsistencia en los datos que se 	proporciona a lo usuarios debido a que uno de los planos no tendrá la misma información que la proporcionada en la búsqueda
+
+	- Se tiene la condición de carrera de agregar un nuevo blueprint a la vez que se consulta estos. Ese comportamiento genera inconsistencias en los datos proporcionados 		al usuario debido a que la cantidad de planos que se entregaron en la búsqueda no concuerda con el número de planos registrados hasta el momento de la inserción del 		nuevo blueprint.
 * Cuales son las respectivas regiones críticas?
 
 Ajuste el código para suprimir las condiciones de carrera. Tengan en cuenta que simplemente sincronizar el acceso a las operaciones de persistencia/consulta DEGRADARÁ SIGNIFICATIVAMENTE el desempeño de API, por lo cual se deben buscar estrategias alternativas.
