@@ -287,7 +287,8 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 	
 	```  
 	Hacemos la peticion de PUT, por medio de GitBash.  
-	![]()
+	![](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/PutPrueba.jpg)
+	
 
 
 ### Parte III
