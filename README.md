@@ -71,7 +71,7 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 
 	```  
 	
-	* Para la implementacion del recurso blueprinst tenemos:
+	* Para la implementacion del recurso blueprints tenemos:
 	
 	```java
 	@RestController
@@ -247,10 +247,21 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
 	Con lo anterior, registre un nuevo plano (para 'diseñar' un objeto jSON, puede usar [esta herramienta](http://www.jsoneditoronline.org/)):
 	
 
-	Nota: puede basarse en el formato jSON mostrado en el navegador al consultar una orden con el método GET.
-
+	Nota: puede basarse en el formato jSON mostrado en el navegador al consultar una orden con el método GET.  
+	
+	### Atraves de la terminal de gitBash, ingresamos el comando y obtenemos.   
+	![pruebaPost](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/MetiendoDatos.jpg)  
+	### En caso que el plano ya exita.  
+	![PostFail](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/ErrorPost.jpg)  
+	
 
 3. Teniendo en cuenta el autor y numbre del plano registrado, verifique que el mismo se pueda obtener mediante una petición GET al recurso '/blueprints/{author}/{bpname}' correspondiente.
+
+	### Cuando pedimos el recurso de "/blueprints/Cristian Castellanos".    
+	![CCastellanosGet](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/CCastellanosBP.jpg)  
+	### Cuando pedimos el recurso de "/blueprints/Cristian Castellanos/PruebaPost".  
+	![PruebaPost](https://github.com/DiegoGonzalez2807/ARSW-LAB5/blob/master/img/media/PruebaPost.jpg)  
+	
 
 4. Agregue soporte al verbo PUT para los recursos de la forma '/blueprints/{author}/{bpname}', de manera que sea posible actualizar un plano determinado.
 
@@ -261,11 +272,23 @@ El componente BlueprintsRESTAPI funcionará en un entorno concurrente. Es decir,
 
 * Qué condiciones de carrera se podrían presentar?
 	- Se tiene la primer condición de carrera de modificar un blueprint mientras que se está consultando estos. Ese comportamiento genera inconsistencia en los datos que se 	proporciona a lo usuarios debido a que uno de los planos no tendrá la misma información que la proporcionada en la búsqueda
-
+	
 	- Se tiene la condición de carrera de agregar un nuevo blueprint a la vez que se consulta estos. Ese comportamiento genera inconsistencias en los datos proporcionados 		al usuario debido a que la cantidad de planos que se entregaron en la búsqueda no concuerda con el número de planos registrados hasta el momento de la inserción del 		nuevo blueprint.
 * Cuales son las respectivas regiones críticas?
+	- Las regiones críticas son todos aquellos métodos que funcionen mediante peticiones HTTP (GET,POST,PUT,DELETE). Esto debido  que estas llaman un recurso compartido que es el arreglo de blueprints ya sea para modificarlo, añadir planos nuevos o eliminar el que el usuario elija. Esto puede generar problemas como deadLocks o comportamientos no deseados como condiciones de carrera en los datos
 
 Ajuste el código para suprimir las condiciones de carrera. Tengan en cuenta que simplemente sincronizar el acceso a las operaciones de persistencia/consulta DEGRADARÁ SIGNIFICATIVAMENTE el desempeño de API, por lo cual se deben buscar estrategias alternativas.
+```java
+	@Component
+@Qualifier("Memory")
+public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
+
+
+    private final int VALUE_PRINTS = 5;
+
+    private final ConcurrentHashMap<Tuple<String,String>,Blueprint> blueprints=new ConcurrentHashMap<>();
+```  
+#### Como solución a las secciones críticas y condiciones de carrera que se presentan. Se vuelve Thread-Safe la persistencia implementada, la cual en este caso es InMemoryBlueprintPersistence. Esto genera que el recurso compartido no pueda ser usado por más de un hilo a la vez. El recurso era el hashMap blueprints. Tenía condiciones de carrera donde si se consultaba y a la vez se insertaba, no se tenía consistencia en los datos. De igual manera, para las regiones críticas, cada hilo tendrá que esperar para poder ejecutar su función. El cambio que se hace es de volver tipo atómico el hashmap (ConcurrentHashMap).
 
 Escriba su análisis y la solución aplicada en el archivo ANALISIS_CONCURRENCIA.txt
 
