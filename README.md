@@ -213,6 +213,24 @@ Del anterior diagrama de componentes (de alto nivel), se desprendió el siguient
  	
 	}
 	```	
+	
+	Para nuestro caso se realiza  
+	```java
+	    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<?> manejadorPostRecursoBluePrint(@RequestBody Blueprint bp){
+        ResponseEntity<?> mensaje;
+        try {
+            //registrar dato
+            service.addNewBlueprint(bp);
+            mensaje = new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (BlueprintPersistenceException e) {
+            Logger.getLogger(BlueprintAPIController.class.getName()).log(Level.FATAL, null, e);
+            mensaje = new ResponseEntity<>("EL nombre del plano ya existe",HttpStatus.NOT_ACCEPTABLE);
+        }
+        return mensaje;
+    }
+    ```  
+    
 
 
 2.  Para probar que el recurso ‘planos’ acepta e interpreta
