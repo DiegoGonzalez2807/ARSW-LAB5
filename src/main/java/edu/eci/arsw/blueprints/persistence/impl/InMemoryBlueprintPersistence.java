@@ -15,7 +15,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+<<<<<<< HEAD
 import java.util.concurrent.ConcurrentMap;
+=======
+>>>>>>> 36aaeffeacb7d6f929d8771e8b45afa2c4c5850c
 
 /**
  *
@@ -28,8 +31,12 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
 
     private final int VALUE_PRINTS = 5;
 
+<<<<<<< HEAD
     private final ConcurrentHashMap<Tuple<String,String>,Blueprint> blueprints=new ConcurrentHashMap<Tuple<String, String>, Blueprint>() {
     };
+=======
+    private final ConcurrentHashMap<Tuple<String,String>,Blueprint> blueprints=new ConcurrentHashMap<>();
+>>>>>>> 36aaeffeacb7d6f929d8771e8b45afa2c4c5850c
 
     public InMemoryBlueprintPersistence() {
         //load stub data
